@@ -38,14 +38,8 @@ _syscall_dispatch:
 	push %ebx
 	push %eax
 
-	/*
 	xorl %ebx, %ebx
 	call *_syscall_tbl(,%ebx, 4)
-	pop %eax
-	pop %ebx
-	push %ebx
-	push %eax
-	*/
 
 	cmpl $256, %eax
 	jb do_syscall

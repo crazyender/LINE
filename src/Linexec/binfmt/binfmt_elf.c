@@ -435,18 +435,18 @@ static int load_elf_binary(struct linux_binprm *bprm)
   
   /* Get the exec-header */
   elf_ex = *((struct elfhdr *) bprm->buf);
-  //printf("[ender]here to run elf\n");
+  my_print("[debug]here to run elf\n");
   retval = -ENOEXEC;
   /* First of all, some simple consistency checks */
   if (elf_ex.e_ident[0] != 0x7f ||
       strncmp(&elf_ex.e_ident[1], "ELF", 3) != 0)
     goto out;
-  //printf("[ender]1\n");
+  //my_print("[ender]1\n");
   if (elf_ex.e_type != ET_EXEC && elf_ex.e_type != ET_DYN)
     goto out;
   if (!elf_check_arch(elf_ex.e_machine))
     goto out;
-  //printf("[ender]2\n");
+  //my_print("[ender]2\n");
 
   /* Now read in all of the header information */
 
@@ -454,7 +454,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
       elf_ex.e_phnum < 1 ||
       elf_ex.e_phnum > 65536 / sizeof(struct elf_phdr))
     goto out;
-  //printf("[ender]3\n");
+ // my_print("[ender]3\n");
   retval = -ENOMEM;
   size = elf_ex.e_phentsize * elf_ex.e_phnum;
   elf_phdata = (struct elf_phdr *) malloc(size);
@@ -464,7 +464,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
   retval = read_exec(bprm->fd, elf_ex.e_phoff, (char *) elf_phdata, size, 1);
   if (retval < 0)
     goto out_free_ph;
-  //printf("[ender]4\n");
+  //my_print("[ender]4\n");
 
   elf_exec_fileno = dup(bprm->fd);
   lseek(elf_exec_fileno, 0, SEEK_SET);
@@ -524,7 +524,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
 		  strcpy(elf_interpreter, tmp);
 	  }
       interpreter_fd = open(elf_interpreter, O_RDONLY);
-
+	  my_print("[debug]open elf_interpreter %s\n", elf_interpreter);
       if (interpreter_fd < 0) {
         retval = -errno;
         goto out_free_interp;
@@ -545,7 +545,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
       interp_elf_ex = *((struct elfhdr *) bprm->buf);
     }
     elf_ppnt++;
-	//printf("[ender]6\n");
+	//my_print("[ender]6\n");
   }
 
   /* Some simple consistency checks for the interpreter */
@@ -573,7 +573,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
       interpreter_type = INTERPRETER_ELF;
     }
   }
-  //printf("[ender]7\n");
+  //my_print("[ender]7\n");
   /* OK, we are done with that, now set up the arg stuff,
      and then start this sucker up */
   if (!bprm->sh_bang) {
@@ -656,7 +656,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
     if (elf_ex.e_type == ET_EXEC || load_addr_set) {
       elf_flags |= MAP_FIXED;
     }
-	//printf("[ender]9\n");
+	//my_print("[ender]9\n");
 #ifdef __VERBOSE__
     printf("mapping: %08lX\n", ELF_PAGESTART(load_bias + vaddr));
 #endif

@@ -102,7 +102,7 @@ SYSCALL(bad_syscall)
 
 SYSCALL(l_print_num)
 {
-	//printf("[ender] eax = %d\n", eax);
+	//my_print("[syscall] %d: %s\n", eax, syscall_names[eax]);
 	return eax;
 }
 

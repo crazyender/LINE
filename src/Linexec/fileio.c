@@ -36,6 +36,7 @@
 #include <sys/poll.h>
 #include <sys/termios.h>
 #include <sys/vfs.h>
+#include <io.h>
 
 
 #include "cygwin_errno.h"
@@ -96,8 +97,8 @@ void my_print(const char* fmt, ... )
 	va_start(ap, fmt);
 	len = vsprintf(buf, fmt, ap);
 	va_end(ap);
-
-	WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), buf, len, &n, NULL);
+	OutputDebugStringA(buf);
+	//WriteFile(GetStdHandle(STD_OUTPUT_HANDLE), buf, len, &n, NULL);
 #endif
 }
 
@@ -127,7 +128,7 @@ SYSCALL(l_read)
     
   ret = read(ebx, (void*)ecx, edx);
   
-  //my_print("%d = read(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
+  //my_print("[fileio]%d = read(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
   if (ret < 0) return -errno;
   return ret;
 }
@@ -136,7 +137,7 @@ SYSCALL(l_read)
 SYSCALL(l_write)
 {
   int ret = write(ebx, (void*)ecx, edx);
-  
+  //my_print("[fileio]%d = write(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
   if (ret < 0) return -errno;
   return ret;
 }
@@ -181,13 +182,7 @@ SYSCALL(l_open)
   int cyg_flags;
 
   // redirect / to the folder where line.exe running
-  //my_print("[ender]open file %s \n", file);
-  //if( file[0] == '/' && strcmp(file, "/dev/null") != 0)
-  //	  file++; 
   change_path_to_relative(file, (char*)ebx);
-  my_print("[ender]open file %s \n", file);
-
-//  log_debug(LOG_LINEXEC_FILEIO, "open(%s)", file);
   
   cyg_flags = map_open_flags(flags);
   
@@ -212,11 +207,10 @@ SYSCALL(l_open)
     
   } else {
     fd = open(file, cyg_flags, mode);
+	my_print("[fileio] %d = open(%s, %d, %d) --> %d\n", fd, file, cyg_flags, mode, errno);
     if (fd < 0) fd = -errno;
   }
   
-  log_debug(LOG_LINEXEC_FILEIO, "%d = open(%s, %d => %d, %d)\n", fd, file, 
-                                flags, cyg_flags, mode);
   return fd;
 }
 
@@ -241,6 +235,7 @@ SYSCALL(l_close)
   if (fd >= 0 && fd < MAX_DIR_FD) {
     free_dir_lookup(fd);
   } 
+  my_print("[fileio]close(%d)\n", fd);
   return close(fd);
 }
 
@@ -894,14 +889,15 @@ SYSCALL(l__llseek)
   unsigned long offset_low = edx;
   long long *result = (long long*)esi;
   unsigned int whence = edi;
+  long long offset = 0;
   int ret;
-  
-//  my_print("llseek(%d, %ld, %ld, %d)\n", fd, offset_high, offset_low, whence);
-  
-  /* XXX: we are completley ignoring offset_high */
-  
-  ret = lseek(fd, offset_low, whence);
-//  my_print("lseek() returns %d\n", ret);
+  long long fp;
+  fp = (long long)lseek(fd, 0, SEEK_CUR);
+  offset = ((long long)offset_high << 32)+(long long)offset_low;
+  if( whence != SEEK_SET ) /*change to abs*/
+	offset += fp;
+  ret = lseek(fd, offset, SEEK_SET);
+	//my_print("[fileio]%d = lseek(%d, %lld, %d) --> %d\n", ret, fd, offset, SEEK_SET, errno);
   if (ret < 0) return -errno;
   
   

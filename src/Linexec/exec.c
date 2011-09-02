@@ -223,20 +223,17 @@ int do_exec(char *filename, char *argv[], char *envp[])
   }else{
       strcpy(fullfile, filename);
   }
-  my_print("[do_exec] filename = %s\n", fullfile);
   fd = open(fullfile, O_RDONLY);
   if (fd < 0){
 	  /* append /bin /usr/bin */
       strcpy(fullfile, root_path);
 	  strcat(fullfile, "/bin/");
 	  strcat(fullfile, filename);
-      my_print("[do_exec] filename = %s\n", fullfile);
 	  fd = open(fullfile, O_RDONLY);
 	  if (fd < 0){
           strcpy(fullfile, root_path);
 	      strcat(fullfile, "/usr/bin/");
           strcat(fullfile, filename);
-          my_print("[do_exec] filename = %s\n", fullfile);
 		  fd = open(fullfile, O_RDONLY);
 		  if (fd < 0){
 			  return -errno;
@@ -285,7 +282,7 @@ int do_exec(char *filename, char *argv[], char *envp[])
     }
   }
   if (retval >= 0) {
-	  
+	  my_print("[debug] copy arv, env done\n");
     retval = search_binary_handler(&bprm);
     /* only returns on error */
   }
@@ -350,11 +347,13 @@ SYSCALL(l_execve)
   argv[base+i] = NULL;
   
   log_debug(LOG_LINEXEC_EXEC, "starting execve()");
-  for (i = 0; i < argc; i++) {
-    log_debug(LOG_LINEXEC_EXEC, "arg %d == '%s'", i, argv[i]);
-  }
-  
-  my_print("[ender]execv argv[0] = %s, linexec = %s\n", l_argv[0], linexec_exe);
 
+  
+  my_print("[exec] ****************\n");
+  for (i = 0; i <= argc; i++) {
+	  my_print("[exec]arg[%d] == '%s'", i, argv[i]);
+  }
+  my_print("[exec] ****************\n");
+  printf("\n");
   return execve(linexec_exe, argv, l_envp);
 }  

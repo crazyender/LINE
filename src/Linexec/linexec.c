@@ -188,8 +188,6 @@ int main(int argc, char *argv[], char *envp[])
   
   get_winver(0);
   cygwin_conv_to_full_posix_path(argv[0], linexec_exe);
-  for( index = 0 ; index < argc; index++ )
-    my_print("[linexec_exe]****argv[%d] = %s\n", index, argv[index]);
 
   
   if ((len = strlen(chroot_path)) > 0) {
