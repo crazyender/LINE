@@ -1,0 +1,22 @@
+High-level overview of LINE
+$Id: Overview.txt,v 1.1 2001/03/21 18:28:44 mvines Exp $
+
+At the most basic level Linux apps and Windows apps look very much the same. 
+Both operating systems use a similar memory space and they each use the same 
+x86 machine instruction set. There are only two real problems 
+
+1. Windows won't recognize and load a Linux application into memory 
+2. Linux applications invoke syscalls using a software interrupt (int 0x80) 
+   which when executed on a Windows machine will cause an immediate GPF. 
+
+To solve the first problem, LINE uses a modified ELF executable loader from the 
+Linux kernel. This gets the Linux applications loaded into memory. 
+
+To get around the second problem, LINE acts as a debugger for the Linux app. 
+When a Linux syscall interrupt is encountered Windows transfers control to the 
+LINE debugger. LINE then directs program execution to its syscall handler and 
+handles the syscall much like real Linux kernel. 
+
+Finally instead of reimplementing all the Linux syscalls itself, LINE simply 
+uses the Cygwin API which already provides a POSIX-like enviroment. Most of 
+the syscalls are just redirected to their Cygwin equivalents. 

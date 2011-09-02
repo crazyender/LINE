@@ -1,0 +1,50 @@
+LINELog
+$Id: Logging.txt,v 1.2 2001/03/21 21:28:10 mvines Exp $
+
+LINE uses a separate and independent logging program called LINELog.  LINELog 
+has an extensible framework which allows you to add/remove log handlers
+(log to console, log to file, log to database, etc) without recompiling LINELog 
+itself.
+
+Currently there is only one logging handler for LINELog, logcon.dll.
+
+Before LINELog will use logcon.dll, it needs to be registered.  Do this by  
+running the command "logconf.exe -r logcon.dll" from the main LINE directory.
+
+
+logconf.exe has a number of other options.  Run "logconf --help" 
+
+The most important option is '-c', it lets you configure a individual log 
+handler.  
+
+Run "logconf.exe -c logcon.dll" to view the configuration options 
+for the logcon.dll handler.
+
+Examples:
+To save the all future log output to a file, run:
+	
+	logcon.exe -c logcon.dll -f logfile.txt
+
+
+Change the minimum logging level run:
+	logcon.exe -c logcon.dll -l NUMBER
+
+  where NUMBER is either 0,1,2,4 or 8  
+  (these magic numbers are defined in common/log.h)
+      ---
+      #define LOG_ERROR        8
+      #define LOG_WARN         4
+      #define LOG_NORMAL       2
+      #define LOG_VERBOSE      1
+      #define LOG_DEBUG        0
+      ---
+
+  The default log level is LOG_VERBOSE
+
+
+NOTE: LINELog does not exit when LINE exits, it sticks around in the Windows
+system tray.  You can kill it by either right clicking on the system tray
+icon or by running "logconf -k"
+
+
+

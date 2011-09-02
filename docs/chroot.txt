@@ -1,0 +1,42 @@
+All about the --chroot flag
+$Id: chroot.txt,v 1.3 2001/03/23 14:40:44 mvines Exp $
+
+LINE supports a --chroot flag which allows you to restrict the Linux 
+applications to a subdirectory of your filesystem.
+
+
+
+Example:
+
+Create a bin/ and lib/ subdirectory in the LINE directory. Then copy all 
+your Linux applications into bin/ and put any shared objects they require 
+in lib/. Then from the LINE directory, run:
+
+	./line --chroot . /bin/app_name 
+
+        (omit the leading ./ from the command line if you are using the 
+         Windows prompt instead of the Cygwin bash shell) 
+
+where app_name is one of the applications you copied into the 
+bin/ subdirectory. 
+
+
+
+Example:
+
+If you have a Linux box running Samba, export the entire Linux filesystem 
+over Samba.  Then mount it on your Windows box (say on drive R:).  Then you can just do something like:
+	
+	Line.exe --chroot r: /bin/bash
+
+Note that there are a couple problems that I've encountered with using Samba in 
+this way.  
+
+First, disk I/O is really slow.  bash takes about twice as long to load over 
+Samba than it does when it's on the local Windows filesystem.  
+
+Second, I've noticed some weird behaviour where certain programs will crash 
+when loaded over Samba.  However they run fine when they are loaded from the 
+local Windows filesystem.  If something crashes over Samba, try it locally 
+first before blaming LINE :)
+

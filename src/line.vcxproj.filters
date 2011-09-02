@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="common\log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\syscall_names.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\version.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\winver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="int80\int80.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="int80\instdrv\instdrv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="int80\test\80.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="line\Line.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="line\process_table.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linelog\linelog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linelog\logconf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linelog\logcon\logcon.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\exec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\fileio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\fork.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\linexec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\mmap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\nativeso.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\signal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\socket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\syscall.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\syscall_impl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\sysctl.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\binfmt\binfmt_elf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\binfmt\binfmt_exe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="linexec\binfmt\binfmt_script.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="int80\i386\handler.asm">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="linelog\handlerdll.def">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\genver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\internal_syscalls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\logapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\logids.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\memflags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\reg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\syscall_names.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\winver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\int80.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\intel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\undocnt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\undocnt2k.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="line\process_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\asm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\cygwin_errno.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\errno.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\exec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\fcntl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linexec.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_dirent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_openflags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_stat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_sysctl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_termbits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\linux_utsname.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\mmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\nativeso.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\net.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\page.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\process.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\signal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\syscall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\syscall_impl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\binfmt\a.out-i386.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\binfmt\a.out.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\binfmt\binfmts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\binfmt\elf-i386.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="linexec\binfmt\elf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

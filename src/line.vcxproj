@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\cygwin\usr\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="common\log.c" />
+    <ClCompile Include="common\syscall_names.c" />
+    <ClCompile Include="common\version.c" />
+    <ClCompile Include="common\winver.c" />
+    <ClCompile Include="int80\instdrv\instdrv.c" />
+    <ClCompile Include="int80\int80.c" />
+    <ClCompile Include="int80\test\80.c" />
+    <ClCompile Include="linelog\linelog.c" />
+    <ClCompile Include="linelog\logconf.c" />
+    <ClCompile Include="linelog\logcon\logcon.c" />
+    <ClCompile Include="linexec\binfmt\binfmt_elf.c" />
+    <ClCompile Include="linexec\binfmt\binfmt_exe.c" />
+    <ClCompile Include="linexec\binfmt\binfmt_script.c" />
+    <ClCompile Include="linexec\exec.c" />
+    <ClCompile Include="linexec\fileio.c" />
+    <ClCompile Include="linexec\fork.c" />
+    <ClCompile Include="linexec\linexec.c" />
+    <ClCompile Include="linexec\mmap.c" />
+    <ClCompile Include="linexec\nativeso.c" />
+    <ClCompile Include="linexec\signal.c" />
+    <ClCompile Include="linexec\socket.c" />
+    <ClCompile Include="linexec\syscall.c" />
+    <ClCompile Include="linexec\syscall_impl.c" />
+    <ClCompile Include="linexec\sysctl.c" />
+    <ClCompile Include="line\Line.c" />
+    <ClCompile Include="line\process_table.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="int80\i386\handler.asm" />
+    <None Include="linelog\handlerdll.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\genver.h" />
+    <ClInclude Include="common\internal_syscalls.h" />
+    <ClInclude Include="common\log.h" />
+    <ClInclude Include="common\logapi.h" />
+    <ClInclude Include="common\logids.h" />
+    <ClInclude Include="common\memflags.h" />
+    <ClInclude Include="common\reg.h" />
+    <ClInclude Include="common\syscall_names.h" />
+    <ClInclude Include="common\version.h" />
+    <ClInclude Include="common\winver.h" />
+    <ClInclude Include="int80\int80.h" />
+    <ClInclude Include="int80\intel.h" />
+    <ClInclude Include="int80\undocnt.h" />
+    <ClInclude Include="int80\undocnt2k.h" />
+    <ClInclude Include="linexec\asm.h" />
+    <ClInclude Include="linexec\binfmt\a.out-i386.h" />
+    <ClInclude Include="linexec\binfmt\a.out.h" />
+    <ClInclude Include="linexec\binfmt\binfmts.h" />
+    <ClInclude Include="linexec\binfmt\elf-i386.h" />
+    <ClInclude Include="linexec\binfmt\elf.h" />
+    <ClInclude Include="linexec\cygwin_errno.h" />
+    <ClInclude Include="linexec\errno.h" />
+    <ClInclude Include="linexec\exec.h" />
+    <ClInclude Include="linexec\fcntl.h" />
+    <ClInclude Include="linexec\linexec.h" />
+    <ClInclude Include="linexec\linux_dirent.h" />
+    <ClInclude Include="linexec\linux_openflags.h" />
+    <ClInclude Include="linexec\linux_stat.h" />
+    <ClInclude Include="linexec\linux_sysctl.h" />
+    <ClInclude Include="linexec\linux_termbits.h" />
+    <ClInclude Include="linexec\linux_utsname.h" />
+    <ClInclude Include="linexec\mmap.h" />
+    <ClInclude Include="linexec\nativeso.h" />
+    <ClInclude Include="linexec\net.h" />
+    <ClInclude Include="linexec\page.h" />
+    <ClInclude Include="linexec\process.h" />
+    <ClInclude Include="linexec\signal.h" />
+    <ClInclude Include="linexec\syscall.h" />
+    <ClInclude Include="linexec\syscall_impl.h" />
+    <ClInclude Include="line\process_table.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,33 @@
+Native Shared Objects
+$Id: Native\040Shared\040Objects.txt,v 1.1 2001/03/21 21:28:10 mvines Exp $
+
+LINE 0.4 includes preliminary support for something that I've called 
+Native Shared Objects (NSO) for lack of a better name.  NSO is an 
+interface where a dynamically linked Linux application can be linked
+to a shared object that contains native Windows code.  
+
+The test/nsotest/ subdirectory contains an example program.  When you 
+run the program under Linux, it outputs to the standard output.  However
+when you run the program under Windows it outputs using a Windows 
+message box.
+
+Here is the general idea...
+
+On Linux:
+Linux Application (nsotest) --> Linux Shared Object (libmsgbox.so)
+
+On Windows:
+Linux Application (nsotest) --> Linux Shared Object Stub (libmsgbox.nso) --> Windows DLL (libmsgbox.so.dll)
+
+
+When running on Windows, the normal Linux loader loads the shared object stub
+just like a normal shared object.  Then when the application tries to invoke
+a function from the shared object, the stub sends a request to LINE to load
+the Windows DLL.  When LINE is finished, the stub then transfers control to the 
+DLL.  
+
+Note that this currently only works with function calls.  It will not work
+with variables in the shared object.
+
+
+TODO: explain this much better and in more detail

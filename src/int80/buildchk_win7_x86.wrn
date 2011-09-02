@@ -1,0 +1,5 @@
+1>warnings in directory d:\cygwin\home\apa\line-0.5\src\int80
+1>d:\cygwin\home\apa\line-0.5\src\int80\undocnt2k.h(1992) : warning C4273: 'ZwQueryMultipleValueKey' : inconsistent dll linkage
+1>d:\cygwin\home\apa\line-0.5\src\int80\int80.c(147) : warning C4242: 'function' : conversion from 'ULONG' to 'CCHAR', possible loss of data
+1>d:\cygwin\home\apa\line-0.5\src\int80\int80.c(192) : warning C4996: 'ExAllocatePool': was declared deprecated
+1>d:\cygwin\home\apa\line-0.5\src\int80\int80.c(161) : warning C4715: 'AddInterrupt' : not all control paths return a value

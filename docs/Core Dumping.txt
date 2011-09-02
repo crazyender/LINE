@@ -1,0 +1,52 @@
+LINE Core Dumping
+$Id: Core\040Dumping.txt,v 1.2 2001/05/29 16:05:30 mvines Exp $
+
+----------------
+Note: LINE 0.5 includes a Linux Syscall Redirector which solves much of
+      the problems described in this file (albeit only for Windows 2000/NT).  
+      See "Syscall Redirector.txt" for details.
+----------------
+
+A major inconvenience that LINE is suffering from right now is that there 
+is no way to debug a running Linux application (linexec.exe process).  
+You can't just attach a Windows debugger to the process because the process 
+is already being debugged by the Line process monitor (Line.exe).  
+
+One way to handle this problem would be to run a Linux gdb from within LINE 
+and use it to debug the other Linux application.  gdb does actually start up 
+in LINE, however the ptrace() syscall is not implemented and LINE's signal 
+handing is still quite poor.
+
+The other option would be to build real debugging features into Line.exe, 
+maybe link it with a libgdb or something.  But that is way in the future.
+
+So at present, all that LINE offers is a hidden syscall that will force 
+the process to dump core and exit.  
+
+The general idea is to put the instructions
+---
+movl $0xdeadf00d, %eax
+int $0x80
+---
+in the Linux executable near the point of the crash.  When LINE executes
+these instructions it will terminate the process and output a file called
+"linecore" in the current directory.  This will contain a memory image of the
+executable with the current register values.  Note that Cygwin state is 
+NOT saved, this includes everything from open file to signal handlers to 
+shared memory regions.
+
+With the linecore file, run the command
+
+$ linexec.exe -f -C linecore
+
+This will load the core back into memory and output a 
+"Press Enter to continue" message.  Linexec is now running on its own and
+you can now attach a real debugger to the process and examine its state.
+
+NOTE:  Since the Linexec process is not running under LINE it will die
+       on the first Linux syscall it encounters.  
+
+The core files that LINE outputs do not conform to any common file format
+(ie. you can't just load them into gdb and expect it to work!)
+
+

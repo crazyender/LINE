@@ -1,0 +1,9 @@
+; These are the functions that a LINELog handler dll must export
+; $Id: handlerdll.def,v 1.1 2001/03/16 20:38:26 mvines Exp $
+
+NAME logfile 
+
+EXPORTS
+	handlerConfig @1
+	handlerLoad @2
+	handlerMsg @3

@@ -1,0 +1,84 @@
+LINE ChangeLog
+$Id: CHANGELOG.txt,v 1.21 2001/05/29 16:05:30 mvines Exp $
+$Id: CHANGELOG.txt,v 1.22 2011/08/31 10:05:30 Ender Zheng $
+
+0.6(Sep 01, 2011)
+  - Fix error in win7
+  - change '/' path to current path
+  - lot of another bugs
+
+0.5 (May 29, 2001)
+  - Fixed problem with running LINE from a directory with a space in it
+  - The 'internal syscalls' are not hardcoded anymore, they are now all #defined
+    in src/common/internal_syscalls.h
+  - Major changes to the Makefiles, all the dependency problems should
+    be fixed now
+  - fixed the hard coding of ProcesInfo.fixedMem[] constants 
+    (now they are all defined in src/common/memflags.h)
+  - int80.sys -- a NT/2000 linux syscall redirector device driver
+
+
+0.4 (March 21, 2001)
+  - fixed a bug findLinexec() which caused a "Unable to run Linexec" error 
+  - removed the excess code in Line.c that dealt with the core dumping as it
+    was unnecessary
+  - preliminary support for native shared objects (native to Windows that is)
+  - added real command line argument handling using getopt()
+  - added --chroot option
+  - Linexec.exe checks to ensure that it is running under LINE debugger before
+    transfering control to the Linux application
+  - readlink() actually works now
+  - partially implemented mremap()
+  - On NT/2000, MAP_ANONYMOUS will not actually commit the memory until it is
+    first used by the process.
+  - fixed getuid() to return uid values other than zero.
+  - implemented statfs() and fstatfs()
+  - preliminary work on a real logging system
+  - implemented nanosleep()
+  - stat()/lstat()/fstat() fixed so that they return a resonable value in 
+    st_size for directories (Cygwin returns zero which causes Pico to crash)
+  - fixed coredump to include EBP
+  - translates the open() flags correctly to their Cygwin equivalents
+  - started on some documentation (the docs/ subdirectory)
+  - sysctl returns ENOTDIR instead of ENOSYS
+
+
+0.3 (March 4, 2001)
+  - Created the CHANGELOG.txt file 
+  - Added ELF interpreter support
+  - Major overhaul of the mmap() and friends.  MAP_FIXED is no longer 
+    implemented by the mmapper.dll kludge.  However there is still much work 
+    to do in this area.
+  - Major overhaul of execve().  LINE now uses a binfmt system similiar to 
+    Linux for loading different types of executables.  LINE can currently 
+    run Linux ELF executables, Windows executables and shell scripts.  
+  - Minor overhaul to the Makefile system so dependencies are handled better
+  - Enabled -Wall and cleaned up most of the resulting warnings
+  - More tolerant about the location of Linexe.exe, it just needs to be in the
+    same directory as Line.exe (0.2 required that Linexec be in the 
+    current directory)
+  - Removed the Visual C++ project files. Now that LINE is 100% gcc compiled 
+    there is no need to keep the Visual C++ project files.
+  - Cleaned up the assembly in asm.h, put Linexec's syscall dispatcher
+    in its own file.
+  - Moved Line.exe's process table stuff into a separate file (process_table.c)
+  - Wrote a quick little DLL rebasing utility.  Can't use the Microsoft 
+    rebase.exe from the Win32 SDK because it doesn't seem to be 
+    redistributable.  I wrote it for mmapper.dll, unfortuantly mmapper.dll
+    is not longer used!  But I just don't have the heart to delete it, maybe
+    somebody will find it useful.
+  - Moved the base address of Linexec.exe to 0x65000000
+  - If a Linux process segfaults LINE will only kill that process instead
+    of terminating everything and exiting
+  - Added primative core dumping support
+  - Fixed open() so that it works for directories on Windows 98
+
+
+0.2 (February 22, 2001)
+  - Compiles with gcc except for mmapper.dll
+  - Uses the Cygwin API to emulate a fair number of the Linux syscalls
+  - Much faster and more stable than 0.1
+
+
+0.1 (October 19, 2000)
+  - initial release 

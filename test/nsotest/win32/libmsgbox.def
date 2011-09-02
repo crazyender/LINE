@@ -1,0 +1,5 @@
+NAME libmsgbox
+
+EXPORTS
+	msgbox @1
+	msgbox2 @2

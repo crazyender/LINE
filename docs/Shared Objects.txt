@@ -1,0 +1,14 @@
+Shared Objects
+$Id: Shared\040Objects.txt,v 1.1 2001/03/21 18:28:44 mvines Exp $
+
+As of version 0.3, the LINE loader supports dynamically linked executables.  
+This means that running an application under LINE is just a matter of copying it
+off your Linux box/partition.  However before a dynamic executable will
+load, you will also need to get the shared objects it requires.
+
+The general methodology is to run 'ldd appname' on your Linux system, see
+what it requires then copy all of those into the Cygwin /lib directory or 
+somewhere else where the loader will be able to find them.
+
+
+

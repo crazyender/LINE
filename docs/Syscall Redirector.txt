@@ -1,0 +1,52 @@
+Linux Syscall Redirector -- for Windows NT/Windows 2000
+$Id: Syscall\040Redirector.txt,v 1.1 2001/05/29 16:05:30 mvines Exp $
+
+
+The line\src\int80\ subdirectory contains a Windows NT/2000 device driver that 
+redirects Linux system calls back to the originating process.  This results in 
+a significant performance increase and enables a Windows debugger to be attached
+to a running Linux application. 
+
+
+WARNING!    This driver is experimental.  It works on my system, but
+WARNING!    it may not on yours.  Be prepared for your system to crash.
+
+
+The line\src\int80\i386\ sub-directory contains a Windows 2000 version of the
+driver, int80.sys.  I don't believe this binary will work on Windows NT.  
+Unfortunately, I don't have a Windows NT system to test the driver with.
+ 
+
+Using the driver
+----------------
+
+The two batch files, install.bat and remove.bat (in line\src\int80), 
+will load/unload the driver.  
+
+Once the driver is loaded, run LINE normally.  It should detect the driver 
+and alter its behavior accordingly.
+
+There is a simple test program in the line\src\int80\test\ subdirectory that 
+can be used to verify that the driver is working.  
+
+
+Building the driver
+-------------------
+
+You will need Microsoft Visual C++ and the Microsoft DDK to build int80.sys.
+
+The DDK is downloadable from http://www.microsoft.com/ddk/
+
+1.  Install the DDK
+
+2.  If you are using Windows NT, open int80.c and follow the comment
+    at the top of the file.  Windows 2000 users can ignore this step.
+
+3.  From the "Free Build Environment", run 'build' from the int80 directory.  
+
+4.  If all goes well, int80.sys will be located in the i386/ sub-directory 
+
+
+
+Thanks to Michael Stout <mstout@users.sourceforge.net> for providing
+the working example that made this driver possible!
