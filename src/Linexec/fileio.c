@@ -72,6 +72,11 @@ void change_path_to_relative(char* des, char* src)
         strcpy(des, src);
         return;
     }
+	if( strstr(src, "/dev") != NULL ||
+		strstr(src, "/proc") != NULL ){
+		strcpy(des, src);
+		return;
+	}
     strcpy(root_path, linexec_exe);
     slash = strrchr(root_path, '/');
     if( !slash ){

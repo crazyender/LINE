@@ -23,7 +23,7 @@
 #define __LINEXEC_H__
 
 /* what Linexec is pretending to be (for 'uname -r') */
-#define UMANE_LINE_SYSNAME "LINE-NT-6.1"
+#define UMANE_LINE_SYSNAME "Linux"
 #define UNAME_LINUX_RELEASE "2.6.32-31-generic"
 #define UNAME_LINE_VERSION "2011-08-31 10:10"
 

@@ -19,8 +19,7 @@
 #include "binfmts.h"
 #include "../errno.h"
 #include "../cygwin_errno.h"
-
-
+#include "../syscall.h"
 static int load_script(struct linux_binprm *bprm);
 
 
@@ -34,8 +33,9 @@ static int load_script(struct linux_binprm *bprm)
 	char *cp, *i_name, *i_name_start, *i_arg;
   int fd;
 	char interp[128];
+	char fullpath[MAX_PATH];
 	int retval;
-
+	my_print("[debug] run script, buf = %s\n", bprm->buf);
 	if ((bprm->buf[0] != '#') || (bprm->buf[1] != '!') || (bprm->sh_bang)) 
 		return -ENOEXEC;
 	/*
@@ -58,6 +58,8 @@ static int load_script(struct linux_binprm *bprm)
 			break;
 	}
 	for (cp = bprm->buf+2; (*cp == ' ') || (*cp == '\t'); cp++);
+	my_print("[debug]load_script(): cp= %s\n", cp);
+
 	if (*cp == '\0') 
 		return -ENOEXEC; /* No interpreter name found */
 	i_name_start = i_name = cp;
@@ -71,6 +73,8 @@ static int load_script(struct linux_binprm *bprm)
 	if (*cp)
 		i_arg = cp;
 	strcpy (interp, i_name_start);
+	my_print("[debug]load_script(): cp= %s, i_name = %s, i_arg = %s\n", cp, i_name, i_arg);
+
 	/*
 	 * OK, we've parsed out the interpreter name and
 	 * (optional) argument.
@@ -96,12 +100,11 @@ static int load_script(struct linux_binprm *bprm)
 	/*
 	 * OK, now restart the process with the interpreter's dentry.
 	 */
-#ifdef __VERBOSE__
-  printf("load_script(): using interpreter %s\n", interp);
-#endif
-  
-  fd = open(interp, O_RDONLY); 
-  if (fd < 0) return -errno;
+  my_print("[debug]load_script(): using interpreter %s\n", interp);
+  change_path_to_relative(fullpath, interp);
+  fd = open(fullpath, O_RDONLY); 
+  if (fd < 0)
+	  return -errno;
 
 	bprm->fd = fd;
 
