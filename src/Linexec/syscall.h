@@ -33,7 +33,7 @@ extern ProcessInfo pInfo;
 typedef int (*syscall)(int,int,int,int,int,int,int);
 #define SYSCALL(syscall_name)  \
             int syscall_name(int eax, int ebx, int ecx, int edx, \
-                             int esi, int edi, int ebp, int eax) 
+                             int esi, int edi, int ebp) 
 
 #include "syscall_names.h" 
 
