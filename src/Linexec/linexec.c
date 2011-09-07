@@ -66,6 +66,7 @@ void show_help(void)
 {
   printf("LINE Program Loader/Syscall Emulator %s\n", line_version_string);
   printf("Copyright (C) 2001  Michael Vines\n"
+         "Copyright (C) 2011  Ender Zheng\n"
          "http://line.sourceforge.net/\n\n"
          "This program is distributed in the hope that it will be useful,\n"
          "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -109,7 +110,7 @@ int main(int argc, char *argv[], char *envp[])
   while( *tmpenvp ){
 	  char* env = *tmpenvp;
 	  if( strstr(env, "PATH=") )
-		  *tmpenvp = "PATH=/bin:/usr/bin";
+		  *tmpenvp = "PATH=/bin:/usr/bin:/usr/local/bin";
 	  tmpenvp++;
   }
   /*

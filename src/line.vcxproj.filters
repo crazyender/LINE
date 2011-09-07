@@ -93,6 +93,12 @@
     <ClCompile Include="linexec\binfmt\binfmt_script.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="int80\syscall.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="int80\systable.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="int80\i386\handler.asm">
@@ -221,6 +227,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="linexec\binfmt\elf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\syscall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="int80\systable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

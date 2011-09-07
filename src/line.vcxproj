@@ -75,6 +75,8 @@
     <ClCompile Include="common\winver.c" />
     <ClCompile Include="int80\instdrv\instdrv.c" />
     <ClCompile Include="int80\int80.c" />
+    <ClCompile Include="int80\syscall.c" />
+    <ClCompile Include="int80\systable.c" />
     <ClCompile Include="int80\test\80.c" />
     <ClCompile Include="linelog\linelog.c" />
     <ClCompile Include="linelog\logconf.c" />
@@ -113,6 +115,8 @@
     <ClInclude Include="common\winver.h" />
     <ClInclude Include="int80\int80.h" />
     <ClInclude Include="int80\intel.h" />
+    <ClInclude Include="int80\syscall.h" />
+    <ClInclude Include="int80\systable.h" />
     <ClInclude Include="int80\undocnt.h" />
     <ClInclude Include="int80\undocnt2k.h" />
     <ClInclude Include="linexec\asm.h" />

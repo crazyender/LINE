@@ -13,33 +13,14 @@
 
 //#include "undocnt.h"
 #include "undocnt2k.h"
-
+#include "syscall.h"
 /*************************************/
 
 
 
-/* XXX: useCount is suffering from a big race condition.  
-        replace with an atomic counter soon! */
-int useCount = 0;
 
 
-/* Interrupt to be hooked */
-#define HOOKINT 0x80  
 
-
-/* Old Idt Entry */
-IdtEntry_t OldIdtEntry;
-IdtEntry_t LinOldIdtEntry;
-
-
-/* Interrupt Handler */
-extern void _cdecl InterruptHandler();
-
-/* Buffer to store result of sidt instruction */
-char buffer[6];
-
-/* Pointer to structure to identify the limit and base of IDTR*/
-PIdtr_t Idtr=(PIdtr_t)buffer;
 int OldHandler;
 ULONG *ServiceCounterTable;
 ULONG ServiceCounterTableSize;
@@ -47,65 +28,7 @@ int NumberOfServices;
 
 
 
-volatile LONG gFinishedDPC = 0;
-void SetupSystemCall(struct _KDPC *DPC, ULONG cpuNum, PVOID arg1, PVOID arg2)
-{
-	void* fp = NULL;
-	//保存IDT入口的基地址和限制信息的数据结构；
-	Idtr_t        idtr;
-	//记录IDT数组的指针，通过它可以查找到我们需要Hook中断号对应的中断门；
-	PIdtEntry_t    IdtEntry;
 
-
-	//汇编指令sidt，获取IDT入口信息；
-	__asm sidt    idtr;
-
-
-	//赋予IDT基地址值；
-	IdtEntry = (PIdtEntry_t)idtr.Base;
-	//判断我们想要添加的中断是否已被占用；
-	if(IdtEntry[0x80].OffsetLow  != 0
-		|| IdtEntry[0x80].OffsetHigh != 0)
-	{
-		//IdtEntry[0x80].DPL = 3;
-	}
-	else
-	{
-		InterlockedIncrement(&gFinishedDPC);
-		return;
-	}
-
-	//关中断
-	__asm cli
-
-	//复制原始的中断门描述信息；
-	RtlCopyMemory(&OldIdtEntry,&IdtEntry[0x80],sizeof(OldIdtEntry));
-
-
-
-	//更新执行代码偏移量的底16位；
-	IdtEntry[0x80].OffsetLow    = (unsigned short)InterruptHandler;
-	//目的代码段的段选择器，CS为8；
-	IdtEntry[0x80].Selector        = 8;
-	//保留位，始终为零；
-	IdtEntry[0x80].Reserved        = 0;
-	//门类型，0xe代表中断门；
-	IdtEntry[0x80].Type        = 0xe;
-	//SegmentFlag设置0代码为段；
-	IdtEntry[0x80].Always0    = 0;
-	//描述符权限等级为3，允许用户模式程序调用本中断；
-	IdtEntry[0x80].Dpl        = 3;
-	//呈现标志位，设置为一；
-	IdtEntry[0x80].Present        = 1;
-	//更新执行代码偏移量的高16位；
-	IdtEntry[0x80].OffsetHigh    = (unsigned short)((unsigned int)InterruptHandler >> 16);
-
-	//开中断
-	__asm sti
-
-	InterlockedIncrement(&gFinishedDPC);
-	DbgPrint("[ring0]gFinishedDPC = 0x%x", gFinishedDPC);
-}
 
 
 ULONG GetProcessorCount()
@@ -122,8 +45,6 @@ NTSTATUS AddInterrupt(void)
 	PKDPC   tmp_dpc;
 	ULONG index = 0;
 	PKDPC   pdpc;
-	// 如果是单核，这样做就可以
-	// 如果是多核， 就需要插dpc
 	processorCount = GetProcessorCount();
 	if( processorCount == 1 )
 	{
@@ -161,22 +82,7 @@ NTSTATUS AddInterrupt(void)
 }
 
 
-void RemoveInterrupt(void)
-{
-  PIdtEntry_t IdtEntry;
 
-  /* Reach to IDT */
-  IdtEntry=(PIdtEntry_t)Idtr->Base;
-
-  _asm cli
-
-  /* Restore the old IdtEntry */
-  memcpy(&IdtEntry[HOOKINT], &OldIdtEntry, sizeof(OldIdtEntry));
-
-  _asm sti
-  
-  useCount = 0;
-}
 
 
 #pragma pack()
