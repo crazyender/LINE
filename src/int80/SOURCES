@@ -2,4 +2,4 @@ TARGETNAME=int80
 TARGETPATH=.
 TARGETTYPE=DRIVER
 
-SOURCES=int80.c systable.c syscall.c
+SOURCES=int80.c systable.c syscall.c syscall_impl.c

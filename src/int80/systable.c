@@ -1,4 +1,8 @@
 #include "systable.h"
+#include "arch\x86\unistd_32.h"
+
+
+
 
 
 ULONG LinuxServiceTable[] = 
@@ -9,7 +13,6 @@ ULONG LinuxServiceTable[] =
 	NOIMLE,
 	NOIMLE,
 	NOIMLE,				//5
-	NOIMLE,
 	NOIMLE,
 	NOIMLE,
 	NOIMLE,
@@ -63,7 +66,7 @@ ULONG LinuxServiceTable[] =
 	NOIMLE,
 	NOIMLE,
 	NOIMLE,
-	NOIMLE,
+	sys_oldolduname,
 	NOIMLE,				//60
 	NOIMLE,
 	NOIMLE,
@@ -113,7 +116,7 @@ ULONG LinuxServiceTable[] =
 	NOIMLE,
 	NOIMLE,
 	NOIMLE,
-	NOIMLE,
+	sys_olduname,
 	NOIMLE,				//110
 	NOIMLE,
 	NOIMLE,
@@ -126,7 +129,7 @@ ULONG LinuxServiceTable[] =
 	NOIMLE,
 	NOIMLE,				//120
 	NOIMLE,
-	NOIMLE,
+	sys_uname,
 	NOIMLE,
 	NOIMLE,
 	NOIMLE,				//125

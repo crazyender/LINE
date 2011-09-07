@@ -108,6 +108,7 @@ NTSTATUS DriverSpecificInitialization()
   _asm sidt buffer
   
   IdtEntry=(PIdtEntry_t)Idtr->Base;
+  AddInterrupt();
   return STATUS_SUCCESS;
 }
 
@@ -172,17 +173,17 @@ NTSTATUS DriverDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
       }
 
     case IOCTL_ADDINT_SYSTEM_SERVICE_USAGE:
-      if (useCount <= 0)  {
-        if (STATUS_SUCCESS == AddInterrupt()) {
+      //if (useCount <= 0)  {
+        /*if (STATUS_SUCCESS == AddInterrupt()) {
           makeretval(ioBuffer,"hooked");
         } else {
           makeretval(ioBuffer,"unable to hook");
-        }
+        }*/
         
-      } else {
-        useCount++;
-        makeretval(ioBuffer,"hooked already");
-      }
+      //} else {
+      //  useCount++;
+      //  makeretval(ioBuffer,"hooked already");
+      //}
 
       Irp->IoStatus.Information = SERVICECOUNTERS_BUFSIZE;
       break;
@@ -194,7 +195,7 @@ NTSTATUS DriverDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
       break;
     
     case IOCTL_REMOVEINT_SYSTEM_SERVICE_USAGE:
-      if (useCount > 1) {
+      /*if (useCount > 1) {
         useCount--;
         makeretval(ioBuffer,"not unhooked, multiple hooks");
         
@@ -204,7 +205,7 @@ NTSTATUS DriverDispatch(IN PDEVICE_OBJECT DeviceObject, IN PIRP Irp)
         
       } else {
         makeretval(ioBuffer,"not hooked");
-      }
+      }*/
       Irp->IoStatus.Information = SERVICECOUNTERS_BUFSIZE;
       break;
     
@@ -232,9 +233,7 @@ VOID DriverUnload(IN PDRIVER_OBJECT DriverObject)
 
   ExFreePool(ServiceCounterTable);
 
-  if (useCount) {
     RemoveInterrupt();
-  }
 
   RtlInitUnicodeString(&deviceLinkUnicodeString, deviceLinkBuffer);
 

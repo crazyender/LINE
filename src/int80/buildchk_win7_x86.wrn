@@ -1,9 +1,0 @@
-1>warnings in directory c:\home\apa\project\line-is-not-emulator\src\int80
-1>c:\home\apa\project\line-is-not-emulator\src\int80\undocnt2k.h(1992) : warning C4273: 'ZwQueryMultipleValueKey' : inconsistent dll linkage
-1>c:\home\apa\project\line-is-not-emulator\src\int80\int80.c(68) : warning C4242: 'function' : conversion from 'ULONG' to 'CCHAR', possible loss of data
-1>c:\home\apa\project\line-is-not-emulator\src\int80\int80.c(98) : warning C4996: 'ExAllocatePool': was declared deprecated
-1>c:\home\apa\project\line-is-not-emulator\src\int80\undocnt2k.h(1992) : warning C4273: 'ZwQueryMultipleValueKey' : inconsistent dll linkage
-1>c:\home\apa\project\line-is-not-emulator\src\int80\syscall.c(189) : warning C4414: 'InterruptHandlerForUser' : short jump to function converted to near
-1>c:\home\apa\project\line-is-not-emulator\src\int80\syscall.c(42) : warning C4733: Inline asm assigning to 'FS:0' : handler not registered as safe handler
-1>c:\home\apa\project\line-is-not-emulator\src\int80\syscall.c(120) : warning C4733: Inline asm assigning to 'FS:0' : handler not registered as safe handler
-1>c:\home\apa\project\line-is-not-emulator\src\int80\int80.c(82) : warning C4715: 'AddInterrupt' : not all control paths return a value
