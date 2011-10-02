@@ -84,7 +84,6 @@ int search_binary_handler(struct linux_binprm *bprm)
       continue;
       
     retval = fn(bprm);
-    
     if (retval != -ENOEXEC) 
       break;
   }
