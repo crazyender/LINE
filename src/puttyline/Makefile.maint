@@ -1,0 +1,86 @@
+## This Makefile is used to build PuTTYcyg releases.
+
+# The upstream version of PuTTY
+PUTTY_VERSION= 0.60
+upstream= ../putty-$(PUTTY_VERSION)-orig/
+
+# The version of PuTTYcyg we are building
+PUTTYCYG_VERSION= 20091228
+src= putty-$(PUTTY_VERSION)/
+
+q= @echo $@;
+.PHONY: dummy
+
+default: binaries
+
+# Build the binary (.zip) and source (patch.gz) release.
+dist: \
+	putty-$(PUTTY_VERSION)-cygterm-$(PUTTYCYG_VERSION).patch.gz \
+	puttycyg-$(PUTTYCYG_VERSION).zip
+
+putty-$(PUTTY_VERSION)-cygterm-$(PUTTYCYG_VERSION).patch.gz: patch
+	$(q) gzip -c $< >$@
+
+patch: Makefile.maint $(upstream) $(src) $(src)windows $(src)windows/cthelper
+	$(q) { \
+	  printf '#!/usr/bin/perl\n'; \
+	  printf 'open(STDIN,"<&DATA");system q{\n'; \
+	  printf 'PUTTY_VERSION=%s\n' $(PUTTY_VERSION); \
+	  <$(src)windows/cthelper/BUILDING \
+	  sed -e '1,/^PUTTY_VERSION=/d' \
+	      -e 's/^## \(.*\)/echo "*** \1"/' \
+	      -e '/^#/d' \
+	      -e '/^$$/d'; \
+	  printf '}\n__DATA__\n'; \
+	  <$(src)manifest.puttycyg \
+	    awk '{sub("./","",$$2);print$$2}END{print"manifest.puttycyg"}' \
+	    | xargs -i diff -Nau $(upstream){} $(src){}; \
+	} >$@; true
+
+DISTFILES= README.txt putty.exe puttytel.exe cthelper.exe
+puttycyg-$(PUTTYCYG_VERSION).zip: \
+	$(DISTFILES:%=puttycyg-$(PUTTYCYG_VERSION)/%)
+	$(q) zip $@ $^
+
+install= $(q) test -d $(dir $@) || mkdir $(dir $@); cp $< $@
+puttycyg-$(PUTTYCYG_VERSION)/README.txt: $(src)windows/cthelper/README.txt
+	$(install)
+puttycyg-$(PUTTYCYG_VERSION)/putty.exe: $(src)windows/putty.exe
+	$(install)
+puttycyg-$(PUTTYCYG_VERSION)/puttytel.exe: $(src)windows/puttytel.exe
+	$(install)
+puttycyg-$(PUTTYCYG_VERSION)/cthelper.exe: $(src)windows/cthelper/cthelper.exe
+	$(install)
+
+binaries: \
+	$(src)windows/putty.exe \
+	$(src)windows/puttytel.exe \
+	$(src)windows/cthelper/cthelper.exe
+
+XFLAGS= -UDEBUG -UNO_MULTIMON
+WMAKE= make \
+	VER=-DPUTTYCYG="$(PUTTYCYG_VERSION)" XFLAGS="$(XFLAGS)" \
+	-C $(src)windows -f Makefile.cyg
+CMAKE= make -C $(src)windows/cthelper
+$(src)windows/putty.exe: $(src)windows/multimon.h dummy; $(WMAKE) putty.exe
+$(src)windows/puttytel.exe: dummy; $(WMAKE) puttytel.exe
+$(src)windows/cthelper/cthelper.exe: dummy
+	$(CMAKE) cthelper.exe
+
+# The MinGW build environment covers the multimon.h API in winuser.h.
+$(src)windows/multimon.h: dummy; touch $@
+
+# The manifest.puttycyg file contains the set of files which are changed by the
+# PuTTYcyg patch.  This rule re-checksums the files it lists.
+$(src)manifest.puttycyg: dummy
+	$(q) awk '{print$$2}' $@ \
+	  | { cd $(src); xargs md5sum; } \
+	  | sed 's/*/ /' >$@.tmp \
+	  && mv $@.tmp $@
+
+manifest-diff:
+	diff -qNr $(upstream) $(src) |awk '{print $$4}'
+
+clean-all:
+	$(WMAKE) clean
+	make -C $(src)windows/cthelper clean
