@@ -345,10 +345,10 @@ int main(int argc, char *argv[])
   }
 #endif
   
-  if (optind > argc-1) {
-    show_help();
-    exit(1);
-  }
+  //if (optind > argc-1) {
+  //  show_help();
+  //  exit(1);
+  //}
  
   /**
    * --linedir not specified, use the path to line.exe 
@@ -412,19 +412,19 @@ int main(int argc, char *argv[])
   
   /* first argument is the execuable name */
   strncat(cmdline, " ", sizeof(cmdline));
-  //strncat(cmdline, argv[optind], sizeof(cmdline));
-  //strncat(cmdline, "\" ", sizeof(cmdline));
-
-  for (i = optind; i < argc; i++) {
-    strncat(cmdline, "\"", sizeof(cmdline));
-    strncat(cmdline, argv[i], sizeof(cmdline));
-    strncat(cmdline, "\" ", sizeof(cmdline));
-  }
+  strncpy(cmdline, "./linexec", sizeof(cmdline));
+  strncat(cmdline, " bash", sizeof(cmdline));
+  //for (i = optind; i < argc; i++) {
+	 // strncat(cmdline, "\"", sizeof(cmdline));
+	 // strncat(cmdline, argv[i], sizeof(cmdline));
+	 // strncat(cmdline, "\" ", sizeof(cmdline));
+  //}
   cmdline[sizeof(cmdline)-1] = '\0';
 
   /* fire off linexec */
   log(LOG_LINE_MISC, "Running: %s", cmdline);
-  
+  execl("./linexec.exe", "-linexec.exe", "bash", 0);
+  return 0;
   
   createFlags = 0;
   
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
   }
   ZeroMemory(&si, sizeof(si));
   si.cb = sizeof(si);
-  //printf("[LINE] cmdline = %s\n", cmdline);
+  printf("[LINE] cmdline = %s\n", cmdline);
   if (!CreateProcess(NULL, cmdline, 
         NULL, NULL, FALSE, 
         createFlags,

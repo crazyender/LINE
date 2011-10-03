@@ -6,7 +6,6 @@
 
 #include "buffer.h"
 #include "debug.h"
-
 Buffer
 buffer_init(size_t size)
 {
@@ -29,6 +28,41 @@ buffer_free(Buffer *pb)
   DBUG_VOID_RETURN;
 }
 
+static void dump_buf(char* buf, ssize_t n)
+{
+	int index = 0;
+	int jndex = 0;
+	char tmp[1024] = {0};
+	for( index = 0 ; index < n; index++ )
+	{
+		if( buf[index] == '\r' ){
+			tmp[jndex++] = '\\';
+			tmp[jndex++] = 'r';
+		}else if( buf[index] == '\n' ){
+			tmp[jndex++] = '\\';
+			tmp[jndex++] = 'n';
+		}else if( buf[index] == '\t' ){
+			tmp[jndex++] = '\\';
+			tmp[jndex++] = 't';
+		}else if( buf[index] > 0 && buf[index] < 127 ){
+			tmp[jndex++] = buf[index];
+		}
+	}
+	my_print("[dmp] %s", tmp);
+}
+static void process_buf(char* buf, ssize_t n)
+{
+	int index = 0;
+	for( index = 0 ; index < n; index++ )
+	{
+		if( buf[index] == '\r' )
+		{
+			if( ((index < (n-1)) && (buf[index+1] != '\n' )) || (index == (n-1)  ))
+				buf[index] = '\n';
+		}
+	}
+}
+
 ssize_t
 buffer_read(Buffer b, int d)
 {
@@ -39,6 +73,8 @@ buffer_read(Buffer b, int d)
   DBUG_PRINT("buffer", ("reading %d: %p:%u", d, &b->data[b->len], b->avail));
   if (b->avail > 0 && (n = read(d, &b->data[b->len], b->avail)) > 0) {
     DBUG_PRINT("io", (" read %4d", n));
+	process_buf(&b->data[b->len], n);
+	//dump_buf(&b->data[b->len], n);
     b->len += n;
     b->avail -= n;
     total += n;

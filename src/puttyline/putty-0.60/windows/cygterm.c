@@ -12,7 +12,7 @@
 #ifdef __INTERIX
 #define CTHELPER "posix.exe /u /c cthelper.exe"
 #else
-#define CTHELPER "cthelper"
+#define CTHELPER "./cthelper"
 #endif
 
 #if !defined(DEBUG)
@@ -22,6 +22,20 @@
 #endif
 
 #define putenv _putenv
+
+#define cygterm_debug my_print
+void my_print(const char* fmt, ... )
+{
+	va_list ap;
+	char buf[1024];
+	int len;
+	DWORD n;
+
+	va_start(ap, fmt);
+	len = vsprintf(buf, fmt, ap);
+	va_end(ap);
+	OutputDebugStringA(buf);
+}
 
 typedef struct cygterm_backend_data {
 	const struct plug_function_table *fn;
@@ -214,20 +228,21 @@ cygterm_init(void *frontend_handle, void **backend_handle,
 	}
 
 	/* Add the Cygwin /bin path to the PATH. */
-	if (cfg->cygautopath) {
-		char *cygwinBinPath = getCygwinBin();
-		if (!cygwinBinPath) {
-			/* we'll try anyway */
-			cygterm_debug("cygwin bin directory not found");
-		}
-		else {
-			cygterm_debug("found cygwin directory: %s", cygwinBinPath);
-			appendPath(cygwinBinPath);
-			sfree(cygwinBinPath);
-		}
-	}
+	//if (cfg->cygautopath) {
+	//	char *cygwinBinPath = getCygwinBin();
+	//	if (!cygwinBinPath) {
+	//		/* we'll try anyway */
+	//		cygterm_debug("cygwin bin directory not found");
+	//	}
+	//	else {
+	//		cygterm_debug("found cygwin directory: %s", cygwinBinPath);
+	//		appendPath(cygwinBinPath);
+	//		sfree(cygwinBinPath);
+	//	}
+	//}
 
 	cygterm_debug("starting cthelper: %s", cmdline);
+
 	if ((err = spawnChild(cmdline, &local->pi, &local->ctl)))
 		goto fail_close;
 

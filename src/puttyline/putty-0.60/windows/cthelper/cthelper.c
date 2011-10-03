@@ -18,7 +18,7 @@
 #else
 #include <stdint.h>
 #endif
-
+#include <windows.h>
 #if __INTERIX
 /* Under SFU, openpty(), and therefore forkpty(), require root privileges.
  * So instead, we write our own forkpty() which uses /dev/ptmx.  I have
@@ -36,6 +36,20 @@
 #include "message.h"
 
 #include "debug.h"
+
+//#define DBUG_PRINT( key, fmt ) do { my_print fmt;} while(0);
+void my_print(const char* fmt, ... )
+{
+	va_list ap;
+	char buf[1024];
+	int len;
+	DWORD n;
+
+	va_start(ap, fmt);
+	len = vsprintf(buf, fmt, ap);
+	va_end(ap);
+	OutputDebugStringA(buf);
+}
 
 /* Buffer sizes */
 enum {
@@ -344,34 +358,12 @@ setup_child(pid_t *pid, const char *term, const char *attr, char *const *argv)
     if (attr) init_pty(0, attr);
 
     if (!(shell = argv[0])) {
-      char *s0;
-      uid_t uid;
-      struct passwd *pw;
-      shell = "/bin/bash";
-      s0 = "-bash";
-      /* get user's login shell */
-      if (!(pw = getpwuid(uid = getuid()))) {
-        DBUG_PRINT("error", ("getpwuid(%ld) failed: %s",
-          uid, strerror(errno)));
-      }
-      else if (!(shell = pw->pw_shell) || *shell != '/') {
-        DBUG_PRINT("error", ("bad shell for user id %ld", uid));
-      }
-      else {
-        DBUG_PRINT("info", ("got shell %s", shell));
-        s0 = strrchr(shell, '/');
-        s0 = str_dup(s0);
-        assert(s0 != 0);
-        s0[0] = '-';
-      }
-      DBUG_PRINT("info", ("startup %s (%s)", shell, s0));
-      execl(shell, s0, (char *)0);
+	  execl("./linexec", "linexec", "bash", 0);
     }
     else {
       DBUG_PRINT("info", ("startup %s", *argv));
       execvp(*argv, argv);
     }
-
     DBUG_PRINT("error", ("exec* failed: %s", strerror(errno)));
     perror(shell);
     exit(111);
@@ -490,11 +482,11 @@ main(int argc, char *const *argv)
   int
     c,      /* control descriptor (stdin) */
     s;      /* socket descriptor (PuTTY) */
+	int tmp; /* debug only */
   Buffer
     cbuf,   /* control buffer */
     pbuf,   /* pty buffer */
     sbuf;   /* socket buffer */
-
   DBUG_INIT_ENV("main",argv[0],"DBUG_OPTS");
 
 #ifndef DBUG_OFF
@@ -507,7 +499,7 @@ main(int argc, char *const *argv)
     3. fork child process (/bin/bash)
     4. select on pty, cygterm backend forwarding pty data and messages
   */
-
+  my_print("[cthelper]main, argc = %d", argc);
   if (argc < 4) {
     DBUG_PRINT("error", ("Too few arguments"));
     DBUG_RETURN(CthelperInvalidUsage);
@@ -565,6 +557,7 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
   /* connect to cygterm */
   {
     int ct_port = strtol(argv[1], 0, 0);
+	my_print("[cthelper]ct_port = %d", ct_port);
 #ifdef DEBUG
     if (ct_port == 0) {
       /* For debugging purposes, make the tty we are started
@@ -601,6 +594,7 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
 
   /* start child process */
   if (0 > (t = setup_child(&child, argv[2], argv[3], argv + 4))) {
+	  OutputDebugStringA("[cthelper]error");
     DBUG_PRINT("startup", ("setup_child failed: %s", strerror(-t)));
     DBUG_RETURN(CthelperPtyforkFailure);
   }
@@ -626,8 +620,7 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
   setnonblock(c);
   setnonblock(s);
   setnonblock(t);
-
-  DBUG_PRINT("info", ("c==%d, s==%d, t==%d", c, s, t));
+  my_print("[cthelper]c==%d, s==%d, t==%d", c, s, t);
   /* allow easy select() and FD_ISSET() stuff */
   assert(0 < c && c < s && s < t);
   DBUG_PRINT("startup", ("starting select loop"));
@@ -643,7 +636,7 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
     if (t && !buffer_isempty(sbuf)) { FD_SET(t, &w); n = t; }
     switch (n = select(n + 1, &r, &w, 0, 0)) {
     case -1:
-      DBUG_PRINT("error", ("%s", strerror(errno)));
+		my_print("[cthelper]%s", strerror(errno));
       if (errno != EINTR) {
         /* Something bad happened */
         close(c); c = 0;
@@ -744,7 +737,8 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
           DBUG_PRINT("io", ("s closed"));
           close(s); s = 0;
           break;
-        }
+		}
+
         DBUG_LEAVE;
         if (!--n) break;
       }
@@ -767,6 +761,8 @@ cthelper PORT TERM ATTRS [COMMAND [ARGS]]
     }
     DBUG_LEAVE;
   }
+  my_print("[cthelper]%s", strerror(errno));
+
   DBUG_PRINT("info", ("end of select loop"));
 
   /* ensure child process killed */

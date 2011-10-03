@@ -126,15 +126,28 @@ static void free_dir_lookup(int fd)
 SYSCALL(l_read)
 {
   int ret;
-
+  int n;
+  BOOL retWin;
   /* ensure that the memory we are reading to has been
      commited (NT/2000 only) or Cygwin will return EPERM */
   forceCommit(ecx, edx);
-    
-  ret = read(ebx, (void*)ecx, edx);
-  
-  //my_print("[fileio]%d = read(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
-  if (ret < 0) return -errno;
+
+  my_print("[fileio]read(%d, %08lX, %d)\n", ebx, ecx, edx);
+  if( ebx == 0 )
+  {
+	  retWin = ReadFile(GetStdHandle(STD_INPUT_HANDLE), ecx, edx, &n, NULL);
+	  if( retWin ) ret = n;
+	  else ret = -1;
+  }
+  else
+  {
+	ret = read(ebx, (void*)ecx, edx); 
+
+  }
+  if (ret < 0){
+	  my_print("[fileio]read fail, ret = %d, error = %s\n", ret, strerror(errno));
+	  return -errno;
+  }
   return ret;
 }
 
@@ -142,7 +155,7 @@ SYSCALL(l_read)
 SYSCALL(l_write)
 {
   int ret = write(ebx, (void*)ecx, edx);
-  //my_print("[fileio]%d = write(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
+  my_print("[fileio]%d = write(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
   if (ret < 0) return -errno;
   return ret;
 }

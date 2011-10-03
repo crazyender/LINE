@@ -99,6 +99,7 @@ extern "C" {
 			     const char **sfile, unsigned *slevel);
   extern void dbug_pargs(unsigned line, const char *keyword);
   extern void dbug_doprnt(const char *format, ...);
+  extern void my_print(const char *format, ...);
   extern void dbug_dump(unsigned line, const char *keyword,
 			   const char *memory, unsigned length);
 
@@ -118,7 +119,7 @@ extern "C" {
 #define DBUG_EXECUTE(keyword,stmt) \
 	do{ if (dbug_on && dbug_keyword(keyword)) { stmt } }while(0)
 #define DBUG_PRINT(keyword,arglist) \
-	do{ if (dbug_on) { dbug_pargs(__LINE__,keyword); dbug_doprnt arglist; }}while(0)
+	do{ if (1) { dbug_pargs(__LINE__,keyword); my_print arglist; }}while(0)
 #define DBUG_PUSH_ENV(optsvar) \
 	do{ char *opts; if ((opts = getenv(optsvar))) dbug_push(opts); }while(0)
 #define DBUG_PUSH(opts) dbug_push(opts)

@@ -353,6 +353,5 @@ SYSCALL(l_execve)
 	  my_print("[exec]arg[%d] == '%s'", i, argv[i]);
   }
   my_print("[exec] ****************\n");
-  printf("\n");
   return execve(linexec_exe, argv, l_envp);
 }  
