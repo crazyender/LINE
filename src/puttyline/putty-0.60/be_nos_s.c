@@ -16,6 +16,7 @@ struct backend_list backends[] = {
     {PROT_RAW, "raw", &raw_backend},
     {PROT_SERIAL, "serial", &serial_backend},
     {PROT_CYGTERM, "cygterm", &cygterm_backend},
+    {PORT_CMD, "cmd", &cmd_backend},
     {0, NULL}
 };
 

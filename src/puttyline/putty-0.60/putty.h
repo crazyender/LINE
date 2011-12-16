@@ -308,7 +308,8 @@ enum {
     PROT_CYGTERM,
     /* PROT_SERIAL is supported on a subset of platforms, but it doesn't
      * hurt to define it globally. */
-    PROT_SERIAL
+    PROT_SERIAL,
+    PORT_CMD
 };
 
 enum {
@@ -901,6 +902,12 @@ extern Backend ssh_backend;
  */
 extern Backend cygterm_backend;
 void cygterm_setup_config_box(struct controlbox *b, int midsession);
+
+/*
+ * Exports from cmdterm.c
+ */
+extern Backend cmd_backend;
+
 
 /*
  * Exports from ldisc.c.

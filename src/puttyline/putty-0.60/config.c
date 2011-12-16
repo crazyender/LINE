@@ -1148,7 +1148,6 @@ void setup_config_box(struct controlbox *b, int midsession,
     ssd->cancelbutton->generic.column = 4;
     /* We carefully don't close the 5-column part, so that platform-
      * specific add-ons can put extra buttons alongside Open and Cancel. */
-
     /*
      * The Session panel.
      */
@@ -1182,6 +1181,7 @@ void setup_config_box(struct controlbox *b, int midsession,
 			      "Raw", 'r', I(PROT_RAW),
 			      "Telnet", 't', I(PROT_TELNET),
 			      "Rlogin", 'i', I(PROT_RLOGIN),
+                  "CMD", '\0', I(PORT_CMD),
 			      NULL);
 	} else {
 	    ctrl_radiobuttons(s, "Connection type:", NO_SHORTCUT, 4,
@@ -1191,6 +1191,7 @@ void setup_config_box(struct controlbox *b, int midsession,
 			      "Telnet", 't', I(PROT_TELNET),
 			      "Rlogin", 'i', I(PROT_RLOGIN),
 			      "SSH", 's', I(PROT_SSH),
+                  "CMD", '\0', I(PORT_CMD),
 			      NULL);
 	}
     }

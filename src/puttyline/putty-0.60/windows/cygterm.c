@@ -24,7 +24,7 @@
 #define putenv _putenv
 
 #define cygterm_debug my_print
-void my_print(const char* fmt, ... )
+static void my_print(const char* fmt, ... )
 {
 	va_list ap;
 	char buf[1024];
@@ -228,18 +228,18 @@ cygterm_init(void *frontend_handle, void **backend_handle,
 	}
 
 	/* Add the Cygwin /bin path to the PATH. */
-	//if (cfg->cygautopath) {
-	//	char *cygwinBinPath = getCygwinBin();
-	//	if (!cygwinBinPath) {
-	//		/* we'll try anyway */
-	//		cygterm_debug("cygwin bin directory not found");
-	//	}
-	//	else {
-	//		cygterm_debug("found cygwin directory: %s", cygwinBinPath);
-	//		appendPath(cygwinBinPath);
-	//		sfree(cygwinBinPath);
-	//	}
-	//}
+	if (cfg->cygautopath) {
+		char *cygwinBinPath = getCygwinBin();
+		if (!cygwinBinPath) {
+			/* we'll try anyway */
+			cygterm_debug("cygwin bin directory not found");
+		}
+		else {
+			cygterm_debug("found cygwin directory: %s", cygwinBinPath);
+			appendPath(cygwinBinPath);
+			sfree(cygwinBinPath);
+		}
+	}
 
 	cygterm_debug("starting cthelper: %s", cmdline);
 

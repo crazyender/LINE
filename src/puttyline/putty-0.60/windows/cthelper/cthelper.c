@@ -37,7 +37,7 @@
 
 #include "debug.h"
 
-//#define DBUG_PRINT( key, fmt ) do { my_print fmt;} while(0);
+#define DBUG_PRINT( key, fmt ) do { my_print fmt;} while(0);
 void my_print(const char* fmt, ... )
 {
 	va_list ap;
@@ -358,7 +358,7 @@ setup_child(pid_t *pid, const char *term, const char *attr, char *const *argv)
     if (attr) init_pty(0, attr);
 
     if (!(shell = argv[0])) {
-	  execl("./linexec", "linexec", "bash", 0);
+	  execl("bash", "bash", 0);
     }
     else {
       DBUG_PRINT("info", ("startup %s", *argv));
