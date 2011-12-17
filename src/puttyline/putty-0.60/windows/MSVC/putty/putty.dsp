@@ -102,6 +102,7 @@ SOURCE=..\..\..\cmdline.c
 # End Source File
 # Begin Source File
 
+
 SOURCE=..\..\..\config.c
 # End Source File
 # Begin Source File
@@ -278,6 +279,11 @@ SOURCE=..\..\..\windows\cygcfg.c
 SOURCE=..\..\..\windows\cygterm.c
 # End Source File
 # Begin Source File
+
+SOURCE=..\..\..\windows\cmdterm.c
+# End Source File
+# Begin Source File
+
 
 SOURCE=..\..\..\windows\sizetip.c
 # End Source File

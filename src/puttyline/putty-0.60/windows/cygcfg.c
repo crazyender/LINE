@@ -18,7 +18,7 @@ void cygterm_setup_config_box(struct controlbox *b, int midsession)
 	    /* c->radio.ncolumns++; */
 	    c->radio.buttons =
 		sresize(c->radio.buttons, c->radio.nbuttons, char *);
-	    c->radio.buttons[c->radio.nbuttons-1] = dupstr("Cygterm");
+	    c->radio.buttons[c->radio.nbuttons-1] = dupstr("cygwin");
 	    c->radio.buttondata =
 		sresize(c->radio.buttondata, c->radio.nbuttons, intorptr);
 	    c->radio.buttondata[c->radio.nbuttons-1] = I(PROT_CYGTERM);

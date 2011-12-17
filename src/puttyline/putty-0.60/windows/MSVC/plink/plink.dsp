@@ -247,6 +247,10 @@ SOURCE=..\..\..\windows\cygterm.c
 # End Source File
 # Begin Source File
 
+SOURCE=..\..\..\windows\cmdterm.c
+# End Source File
+# Begin Source File
+
 SOURCE=..\..\..\windows\wincons.c
 # End Source File
 # Begin Source File

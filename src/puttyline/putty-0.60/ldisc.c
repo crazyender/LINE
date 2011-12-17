@@ -264,13 +264,13 @@ void ldisc_send(void *handle, char *buf, int len, int interactive)
 	      case KCTRL('M'):	       /* send with newline */
 		    if (ldisc->buflen > 0)
 			ldisc->back->send(ldisc->backhandle, ldisc->buf, ldisc->buflen);
-		    if (ldisc->cfg->protocol == PROT_RAW)
+		    if (ldisc->cfg->protocol == PROT_RAW || ldisc->cfg->protocol == PORT_CMD)
 			ldisc->back->send(ldisc->backhandle, "\r\n", 2);
 		    else if (ldisc->cfg->protocol == PROT_TELNET && ldisc->cfg->telnet_newline)
 			ldisc->back->special(ldisc->backhandle, TS_EOL);
 		    else
 			ldisc->back->send(ldisc->backhandle, "\r", 1);
-		    if (ECHOING)
+		    if ( (ECHOING) && (ldisc->cfg->protocol != PORT_CMD) )
 			c_write(ldisc, "\r\n", 2);
 		    ldisc->buflen = 0;
 		    break;

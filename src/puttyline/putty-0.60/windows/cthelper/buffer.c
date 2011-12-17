@@ -50,6 +50,8 @@ static void dump_buf(char* buf, ssize_t n)
 	}
 	my_print("[dmp] %s", tmp);
 }
+
+extern long int convert_lf;
 static void process_buf(char* buf, ssize_t n)
 {
 	int index = 0;
@@ -57,7 +59,7 @@ static void process_buf(char* buf, ssize_t n)
 	{
 		if( buf[index] == '\r' )
 		{
-			if( ((index < (n-1)) && (buf[index+1] != '\n' )) || (index == (n-1)  ))
+			if(  (index == (n-1)  ))
 				buf[index] = '\n';
 		}
 	}
@@ -73,8 +75,9 @@ buffer_read(Buffer b, int d)
   DBUG_PRINT("buffer", ("reading %d: %p:%u", d, &b->data[b->len], b->avail));
   if (b->avail > 0 && (n = read(d, &b->data[b->len], b->avail)) > 0) {
     DBUG_PRINT("io", (" read %4d", n));
-	process_buf(&b->data[b->len], n);
-	//dump_buf(&b->data[b->len], n);
+	if( convert_lf )
+		process_buf(&b->data[b->len], n);
+	dump_buf(&b->data[b->len], n);
     b->len += n;
     b->avail -= n;
     total += n;

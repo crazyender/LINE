@@ -362,6 +362,10 @@ setup_child(pid_t *pid, const char *term, const char *attr, char *const *argv)
     }
     else {
       DBUG_PRINT("info", ("startup %s", *argv));
+	  if( (strstr(*argv, "cmd") != NULL ) || ( strstr(*argv, "powershell") != NULL) )
+		  convert_lf = 0;
+	  else
+		  convert_lf = 1;
       execvp(*argv, argv);
     }
     DBUG_PRINT("error", ("exec* failed: %s", strerror(errno)));

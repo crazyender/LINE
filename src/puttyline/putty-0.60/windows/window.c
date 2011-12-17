@@ -4293,9 +4293,10 @@ static int TranslateKey(UINT message, WPARAM wParam, LPARAM lParam,
 	 * foul it up when Alt is pressed, for some reason.)
 	 */
 	if (wParam == VK_RETURN) {     /* Return */
-	    *p++ = 0x0D;
+		*p++ = '\r';
+	    *p++ = '\n';
 	    *p++ = 0;
-	    return -2;
+	    return -3;
 	}
 
 	if (left_alt && wParam >= VK_NUMPAD0 && wParam <= VK_NUMPAD9)
