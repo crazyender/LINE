@@ -1,24 +1,20 @@
 LINE 
-http://line.sourceforge.net/
+https://github.com/crazyender/LINE
+cloned from another project: http://line.sourceforge.net/
 $Id: README.txt,v 1.8 2001/05/29 16:16:06 mvines Exp $
-
+$Id: README.txt,v 1.9 2012/02/16 11:24:06 crazyender $
 
 LINE Is Not an Emulator.  LINE executes unmodified Linux applications on 
-Windows 98/2000 by intercepting Linux system calls.  The Linux 
+Windows 7 by intercepting Linux system calls.  The Linux 
 applications themselves are not emulated.  They run directly on the 
 CPU like all other Windows applications.  
 
 
-LINE runs best on Windows 2000 because that is my primary development platform.
-However I do some of the LINE development on a Windows 98 system (mostly on
-weekends).  Generally I find that fork()ing is much slower on Windows 98 than 
-Windows 2000.   Also Windows 98 is much less tolerant about crashing than 
-Windows 2000.  If LINE crashes on 98 chances are very good that your system 
-will die.  I have never had Windows 2000 killed by LINE.
+LINE runs best on Windows 7 because that is my primary development platform.
+Currently LINE can not run glibc that with NPTL feature.
 
-LINE has not been tested at all on Windows 95, Windows NT or Windows ME.  
-However I have received reports that LINE runs fine on Windows NT. 
-
+LINE will use modified putty as it's console, but this can not be done perfectly
+before I merge file io system calls into kernel space
 
 License
 -------
@@ -33,21 +29,13 @@ Usage
 The main executable is Line.exe.  The first command line parameter is the 
 Linux application to run, any other command line parameters will be passed 
 along to the app.  
-
-There are a number of small test programs in the test/ subdirectory that
-will get you playing with LINE quickly. 
-
-Example:
-  Line.exe test/hello 
-
-Example:
-  Line.exe test/argtest arg1 arg2 arg3
-
-
-NOTE: Before running LINE the first time, you should probably run the command:
-      logconf -r logcon.dll
-      
-      See docs/Logging.txt for info on what this command actually does
+You can build a workspace by copy binarys from linux system, for example, 
+copy /bin /lib /usr/bin from linux into c:\line, and put line.exe, linexec.exe,
+cygwin1.dll into the same folder. Open a cmd, enter into c:\line, type 
+following command:
+c:\line\line.exe bash
+Then you can see bash from linux is running, and simple command(ls, rm, etc...)
+works too.
 
 
 Compiling LINE
