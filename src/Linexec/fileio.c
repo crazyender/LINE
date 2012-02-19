@@ -63,29 +63,30 @@ char *dir_name_lookup[MAX_DIR_FD] = {NULL,};
 extern char linexec_exe[MAX_PATH];
 void change_path_to_relative(char* des, char* src)
 {
-    char root_path[MAX_PATH] = {0};
+    //char root_path[MAX_PATH] = {0};
     char* slash = NULL;
     if( !src || !*src || !des){
         return;
     }
-    if( src[0] != '/' ){
-        strcpy(des, src);
-        return;
-    }
-	if( strstr(src, "/dev") != NULL ||
-		strstr(src, "/proc") != NULL ){
-		strcpy(des, src);
-		return;
-	}
-    strcpy(root_path, linexec_exe);
-    slash = strrchr(root_path, '/');
-    if( !slash ){
-        strcpy(des, src);
-        return;
-    }
-    *slash = '\0';
-    strcpy(des, root_path);
-    strcat(des, src);
+	strcpy(des, src);
+ //   if( src[0] != '/' ){
+ //       strcpy(des, src);
+ //       return;
+ //   }
+	//if( strstr(src, "/dev") != NULL ||
+	//	strstr(src, "/proc") != NULL ){
+	//	strcpy(des, src);
+	//	return;
+	//}
+ //   strcpy(root_path, linexec_exe);
+ //   slash = strrchr(root_path, '/');
+ //   if( !slash ){
+ //       strcpy(des, src);
+ //       return;
+ //   }
+ //   *slash = '\0';
+ //   strcpy(des, root_path);
+ //   strcat(des, src);
     return;
 
 
@@ -121,8 +122,6 @@ static void free_dir_lookup(int fd)
   }
 }    
 
-
-
 SYSCALL(l_read)
 {
   int ret;
@@ -132,18 +131,16 @@ SYSCALL(l_read)
      commited (NT/2000 only) or Cygwin will return EPERM */
   forceCommit(ecx, edx);
 
+  ret = read(ebx, (void*)ecx, edx); 
   my_print("[fileio]read(%d, %08lX, %d)\n", ebx, ecx, edx);
-  if( ebx == 0 )
-  {
-	  retWin = ReadFile(GetStdHandle(STD_INPUT_HANDLE), ecx, edx, &n, NULL);
-	  if( retWin ) ret = n;
-	  else ret = -1;
-  }
-  else
-  {
-	ret = read(ebx, (void*)ecx, edx); 
 
+  if( (ebx == 0 || ebx == 1 || ebx == 2)
+	  && (ret >= 0) && isatty(ebx))
+  {
+	  if( ( edx == 1 ) && ( *((char*)ecx) == '\r' ) )
+		  write(2, "\r\n", 2);
   }
+
   if (ret < 0){
 	  my_print("[fileio]read fail, ret = %d, error = %s\n", ret, strerror(errno));
 	  return -errno;
@@ -154,7 +151,14 @@ SYSCALL(l_read)
 
 SYSCALL(l_write)
 {
-  int ret = write(ebx, (void*)ecx, edx);
+  int ret = 0;
+  if( (ebx == 0 || ebx == 1 || ebx == 2)
+	  && (ret >= 0) && isatty(ebx))
+  {
+	  my_print("[stdout] %s", (char*)ecx);
+  }
+
+  ret = write(ebx, (void*)ecx, edx);
   my_print("[fileio]%d = write(%d, %08lX, %d)\n", ret, ebx, ecx, edx);
   if (ret < 0) return -errno;
   return ret;
@@ -193,18 +197,19 @@ SYSCALL(l_open)
 {
   struct stat s;
   int fd;
-  char file[MAX_PATH];
+  char *file = ebx;
   int flags = ecx;
   int mode = edx;
   int statret;
   int cyg_flags;
 
   // redirect / to the folder where line.exe running
-  change_path_to_relative(file, (char*)ebx);
+  //change_path_to_relative(file, (char*)ebx);
   
   cyg_flags = map_open_flags(flags);
   
   statret = stat(file, &s);
+  my_print("[fileio] stat in open, %s -> %d", file, statret);
  
   /* directories are special */
   if ((flags & LINUX_O_DIRECTORY) || ((0 == statret) &&  (s.st_mode & S_IFDIR))) {
@@ -226,7 +231,10 @@ SYSCALL(l_open)
   } else {
     fd = open(file, cyg_flags, mode);
 	my_print("[fileio] %d = open(%s, %d, %d) --> %d\n", fd, file, cyg_flags, mode, errno);
-    if (fd < 0) fd = -errno;
+    if (fd < 0)
+		fd = -errno;
+	else
+		errno = 0;
   }
   
   return fd;
@@ -329,10 +337,11 @@ static void get_dir_size(char *name, struct linux_stat *ls)
   DIR *dir;
   struct dirent *d;
   int size = 0;
-    char file[MAX_PATH];
-    change_path_to_relative(file, (char*)name);
-  my_print("[ender]get dir size %s \n", file);
+    char *file = name;
+    //change_path_to_relative(file, (char*)name);
   dir = opendir(file);
+  my_print("[ender]opendir %s -> %d\n", file, dir);
+
   if (NULL == dir) return;
   
   while (NULL != (d = readdir(dir))) {
@@ -374,9 +383,9 @@ SYSCALL(l_lstat)
   struct linux_stat *ls = (struct linux_stat*)ecx;
     char file[MAX_PATH];
     change_path_to_relative(file, (char*)ebx);
-  my_print("[ender]lstat file %s \n", file);
+  //my_print("[ender]lstat file %s \n", file);
   ret = lstat((char*)file, &s);
-//  my_print("%d = lstat(%s) (errno=%d)\n", ret, (char*)ebx, errno);
+  my_print("[ender]%d = lstat(%s) (errno=%d)\n", ret, (char*)ebx, errno);
   if (ret != 0) return -errno;
   
   copy_stat(ls, &s);
@@ -415,7 +424,7 @@ SYSCALL(l_ioctl)
 {
   int ret;
   
-//  my_print("ioctl(%d, %X, %X)\n", ebx, ecx, edx);
+  my_print("ioctl(%d, %X, %X)\n", ebx, ecx, edx);
 
   /* convert the ioctl requests to their cygwin equivalents... */  
   switch (ecx) {
@@ -597,11 +606,7 @@ SYSCALL(l_dup2)
   
 SYSCALL(l_link)
 {
-    char file[MAX_PATH];
-    char file2[MAX_PATH];
-    change_path_to_relative(file, (char*)ebx);
-    change_path_to_relative(file2, (char*)ecx);
-  return link((char*)file, (char*)file2);
+  return link((char*)ebx, (char*)ecx);
 }
 
 
@@ -616,8 +621,10 @@ SYSCALL(l_chdir)
 {
     char file[MAX_PATH];
     change_path_to_relative(file, (char*)ebx);
-	my_print("[ender]chdir file %s \n", file);
-  if (chdir((char*)file)) return -errno;
+  if (chdir((char*)file)){
+	  my_print("[ender]chdir file %s fail, errno = %d\n", file, errno);
+	  return -errno;
+  }
   return 0;
 }
 

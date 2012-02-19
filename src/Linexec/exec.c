@@ -203,48 +203,43 @@ int do_exec(char *filename, char *argv[], char *envp[])
   int fd;
   int i;
   char fullfile[MAX_PATH];
-  char root_path[MAX_PATH];
   char* slash;
   bprm.p = PAGE_SIZE*MAX_ARG_PAGES-sizeof(void *)*PAGE_SIZE;
-  //for (i=0 ; i<MAX_ARG_PAGES ; i++)       /* clear page-table */
-  //  bprm.page[i] = 0;
   bprm.page = malloc(PAGE_SIZE*MAX_ARG_PAGES);
   memset( bprm.page, 0, PAGE_SIZE*MAX_ARG_PAGES);
 
-  strcpy(root_path, linexec_exe);
-  slash = strrchr(root_path, '/');
-  if(slash)
-      *slash = '\0';
+  my_print("[exec] filename = %s", filename);
+  strcpy(fullfile, filename);
 
-  if( filename[0] == '/' ){
-      strcpy(fullfile, root_path);
-      strcat(fullfile, filename);
-  }else{
-      strcpy(fullfile, filename);
-  }
   fd = open(fullfile, O_RDONLY);
   if (fd < 0){
-	  /* append /bin /usr/bin */
-      strcpy(fullfile, root_path);
-	  strcat(fullfile, "/bin/");
+	  strcpy(fullfile, "/bin/");
 	  strcat(fullfile, filename);
+	  my_print("[exec] filename = %s", fullfile);
 	  fd = open(fullfile, O_RDONLY);
 	  if (fd < 0){
-          strcpy(fullfile, root_path);
-	      strcat(fullfile, "/usr/bin/");
+	      strcpy(fullfile, "/usr/bin/");
           strcat(fullfile, filename);
+		  my_print("[exec] filename = %s", fullfile);
 		  fd = open(fullfile, O_RDONLY);
 		  if (fd < 0){
-			  return -errno;
+			  strcpy(fullfile, "/usr/local/bin/");
+			  strcat(fullfile, filename);
+			  my_print("[exec] filename = %s", fullfile);
+			  fd = open(fullfile, O_RDONLY);
+			  if( fd < 0 )
+				return -errno;
+			  else
+				  filename = fullfile;
 		  }else{
 			  filename = fullfile;
 		  }
 	  }else{
 		  filename = fullfile;
 	  }
-	  
   }
 
+  my_print("[exec] at last filename = %s", fullfile);
   bprm.filename = filename;
   bprm.fd = fd;
   

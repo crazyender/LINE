@@ -188,8 +188,8 @@ int main(int argc, char *argv[], char *envp[])
   } 
   
   get_winver(0);
-  cygwin_conv_to_full_posix_path(argv[0], linexec_exe);
-
+  strcpy(linexec_exe,"/bin/linexec");
+  my_print("[exec] convert %s to %s", argv[0], linexec_exe);
   
   if ((len = strlen(chroot_path)) > 0) {
     /* cygwin_conv_to_full_posix_path seems to convert '.' to '/path/.', so
@@ -214,7 +214,7 @@ int main(int argc, char *argv[], char *envp[])
     }
   }
   
-//  printf("linexec_exe is (%s), chroot is (%s)\n", linexec_exe, chroot_path);
+  my_print("linexec_exe is (%s), chroot is (%s)\n", linexec_exe, chroot_path);
   
   dlfork(FORK_RELOAD);
  
